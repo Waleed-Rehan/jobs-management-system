@@ -119,14 +119,6 @@ php artisan serve
 
 ---
 
-## 🔒 Middleware & Policies (Recommended)
-
-* Add `Route::middleware(['auth','verified'])` for the dashboard and job routes.
-* Create a `JobPolicy` to ensure users can only update/delete their own jobs.
-* Use form method spoofing for `PUT`, `PATCH`, and `DELETE` in Blade: `@method('PUT')`, `@method('DELETE')`.
-
----
-
 ## 📚 About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. It eases common tasks like routing, dependency injection, caching, ORM, migrations, queues, and broadcasting. See the official docs for details.
