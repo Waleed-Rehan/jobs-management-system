@@ -27,26 +27,55 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    
-                  {{-- (Optional) quick search; harmless without backend --}}
-<form method="GET" action="{{ url()->current() }}" class="hidden md:flex items-center gap-2">
-    <label for="q" class="sr-only">Search jobs</label>
-    <input
-        id="q"
-        name="q"
-        type="text"
-        value="{{ request('q') }}"
-        placeholder="Search jobs…"
-        class="h-9 w-64 rounded-full border border-gray-300/60 dark:border-white/10 bg-white/70 dark:bg-gray-900/40 backdrop-blur px-3 text-sm text-gray-800 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/70 transition"
-    />
+                    {{-- (Optional) quick search; harmless without backend --}}
+   {{-- Enhanced Quick Search (button on the left, longer input, softer colors; no native clear) --}}
+<form method="GET" action="{{ url()->current() }}" class="hidden md:flex items-center gap-2 relative">
+    {{-- Submit button on the LEFT --}}
+    <button type="submit"
+            class="inline-flex items-center justify-center h-9 px-4 rounded-full text-sm font-medium text-white
+                   bg-gradient-to-r from-indigo-600 to-slate-700 hover:from-indigo-700 hover:to-slate-800
+                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500 transition">
+        🔍 Search
+    </button>
+
+    <div class="relative">
+        {{-- Use type="text" to avoid the browser's built-in blue ✕ for type="search" --}}
+        <input
+            id="q"
+            name="q"
+            type="text"
+            inputmode="search"
+            enterkeyhint="search"
+            value="{{ request('q') }}"
+            placeholder="Search jobs…"
+            class="h-9 w-80 lg:w-96 pr-8 rounded-full border
+                   border-slate-300/70 dark:border-slate-700/70
+                   bg-slate-50/80 dark:bg-slate-900/40 backdrop-blur
+                   px-3 text-sm text-slate-800 dark:text-slate-100 placeholder:text-slate-400
+                   focus:outline-none focus:ring-2 focus:ring-indigo-500/70 transition"
+        />
+
+        {{-- Single red ❌ clear button — appears only when a search is active --}}
+        @if(request('q'))
+            <button type="button"
+                    onclick="window.location='{{ url()->current() }}'"
+                    aria-label="Clear search"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[13px] leading-none
+                           text-red-500 hover:text-red-600 dark:hover:text-red-400
+                           focus:outline-none select-none">
+                ❌
+            </button>
+        @endif
+    </div>
 </form>
 
-<a href="{{ route('jobs.create') }}"
-   class="inline-flex items-center gap-2 h-9 px-4 rounded-full text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-purple-500 transition">
-    <span class="text-base leading-none">➕</span>
-    <span>Add Job</span>
-</a>
 
+
+
+                    <a href="{{ route('jobs.create') }}"
+                       class="inline-flex items-center gap-2 h-9 px-4 rounded-full text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-purple-500 transition">
+                        <span class="text-base leading-none">➕</span>
+                        <span>Add Job</span>
                     </a>
                 </div>
             </div>
@@ -66,18 +95,20 @@
                     </div>
 
                     <div class="flex items-center gap-2">
-                     {{-- Sort (no JS needed; safe without jobs.index route) --}}
-<form method="GET" action="{{ url()->current() }}" class="flex items-center">
-    <label for="sort" class="sr-only">Sort</label>
-    <select id="sort" name="sort" onchange="this.form.submit()"
-            class="h-9 rounded-full border border-gray-300/60 dark:border-white/10 bg-white/80 dark:bg-gray-900/40 backdrop-blur px-3 text-sm text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500/70 transition">
-        <option value="">Sort by</option>
-        <option value="recent" @selected(request('sort')==='recent')>Most recent</option>
-        <option value="title" @selected(request('sort')==='title')>Title (A–Z)</option>
-        <option value="location" @selected(request('sort')==='location')>Location</option>
-    </select>
-</form>
-
+                        {{-- Sort (no JS needed; safe without jobs.index route) --}}
+                        <form method="GET" action="{{ url()->current() }}" class="flex items-center">
+                            <label for="sort" class="sr-only">Sort</label>
+                            <select id="sort" name="sort" onchange="this.form.submit()"
+                                    class="h-9 rounded-full border border-gray-300/60 dark:border-white/10 bg-white/80 dark:bg-gray-900/40 backdrop-blur px-3 text-sm text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500/70 transition">
+                                <option value="">Sort by</option>
+                                <option value="recent" @selected(request('sort')==='recent')>Most recent</option>
+                                <option value="title" @selected(request('sort')==='title')>Title (A–Z)</option>
+                                <option value="location" @selected(request('sort')==='location')>Location</option>
+                            </select>
+                            @if(request('q'))
+                                <input type="hidden" name="q" value="{{ request('q') }}">
+                            @endif
+                        </form>
                     </div>
                 </div>
 
@@ -98,27 +129,31 @@
                         {{-- Grid of cards --}}
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach ($jobs as $job)
+                                @php $titleId = 'job-title-'.$job->id; @endphp
+
                                 <article
+                                    role="link"
+                                    tabindex="0"
+                                    onclick="window.location.href='{{ route('jobs.show', $job->id) }}'"
+                                    onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); window.location.href='{{ route('jobs.show', $job->id) }}'; }"
+                                    aria-label="View details for {{ $job->title }}"
+                                    aria-describedby="{{ $titleId }}"
                                     class="group relative overflow-hidden rounded-2xl border border-white/20 dark:border-white/10 bg-white/70 dark:bg-gray-800/40 backdrop-blur-xl shadow-[0_10px_30px_-14px_rgba(0,0,0,0.45)] transition
                                            motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-[0_18px_40px_-16px_rgba(0,0,0,0.5)]
-                                           focus-within:ring-2 focus-within:ring-purple-500/80">
+                                           focus-visible:ring-2 focus-visible:ring-purple-500/80 cursor-pointer outline-none">
                                     {{-- top accent line --}}
                                     <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 via-violet-500 to-fuchsia-500 opacity-70"></div>
 
                                     <div class="p-5 flex flex-col h-full">
-                                        {{-- Title + optional company logo placeholder --}}
                                         <div class="flex items-start gap-3">
                                             <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-white/20 dark:border-white/10">
-                                                <span class="text-lg">💼</span>
+                                                <span class="text-lg" aria-hidden="true">💼</span>
                                             </div>
                                             <div class="min-w-0">
-                                                <a href="{{ route('jobs.show', $job->id) }}" class="block text-inherit">
-                                                    <h4 class="text-lg font-semibold tracking-tight text-gray-900 dark:text-white line-clamp-2">
-                                                        {{ $job->title }}
-                                                    </h4>
-                                                </a>
+                                                <h4 id="{{ $titleId }}" class="text-lg font-semibold tracking-tight text-gray-900 dark:text-white line-clamp-2">
+                                                    {{ $job->title }}
+                                                </h4>
                                                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                                    {{-- you can inject company name here if available --}}
                                                     Listing ID: #{{ $job->id }}
                                                 </p>
                                             </div>
@@ -149,14 +184,16 @@
                                         {{-- Actions --}}
                                         <div class="mt-5 flex items-center justify-between">
                                             <a href="{{ route('jobs.edit', $job->id) }}"
+                                               onclick="event.stopPropagation();"
                                                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-purple-500 transition">
                                                 ✏️ Edit
                                             </a>
 
-                                            <form action="{{ route('jobs.destroy', $job->id) }}" method="POST" onsubmit="return confirm('Delete this job?');" class="m-0">
+                                            <form action="{{ route('jobs.destroy', $job->id) }}" method="POST" class="m-0" onsubmit="event.stopPropagation(); return confirm('Delete this job?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
+                                                        onclick="event.stopPropagation();"
                                                         class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium text-white bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-rose-500 transition">
                                                     🗑️ Delete
                                                 </button>
@@ -169,6 +206,26 @@
                                                 bg-[radial-gradient(500px_circle_at_var(--x,50%)_var(--y,50%),rgba(168,85,247,0.10),transparent_60%)]"></div>
                                 </article>
                             @endforeach
+                        </div>
+
+                        {{-- Pagination --}}
+                        <div class="mt-8 flex items-center justify-between flex-wrap gap-4">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                @if($jobs->total() > 0)
+                                    Showing
+                                    <span class="font-medium text-gray-800 dark:text-gray-200">{{ $jobs->firstItem() }}</span>–
+                                    <span class="font-medium text-gray-800 dark:text-gray-200">{{ $jobs->lastItem() }}</span>
+                                    of
+                                    <span class="font-medium text-gray-800 dark:text-gray-200">{{ $jobs->total() }}</span>
+                                    jobs
+                                @else
+                                    No jobs found.
+                                @endif
+                            </p>
+                            <div class="w-full sm:w-auto flex justify-end">
+                                {{-- Use your custom elegant pagination --}}
+                                {{ $jobs->onEachSide(1)->links('vendor.pagination.modern') }}
+                            </div>
                         </div>
                     @endif
                 </div>

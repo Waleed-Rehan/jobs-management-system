@@ -40,12 +40,14 @@ Here’s a quick look at the main sections of the Job Dashboard:
 | Feature                      | Screenshot                                                      |
 | ---------------------------- | --------------------------------------------------------------- |
 | **Welcome Page**             | ![Welcome Page Screenshot](public/screenshots/welcome.png)      |
-| **Dashboard1**               | ![Dashboard Screenshot](public/screenshots/dashboard.png)       |
-| **Dashboard2**               | ![Dashboard Screenshot](public/screenshots/dashboard_1.png)     |
-| **Show Job Details**         | ![Show Job Screenshot](public/screenshots/show-job.png)         |
+| **Home Page**                | ![Welcome Page Screenshot](public/screenshots/Home_page.png)    |
+| **jobs Dashboard1**          | ![Dashboard Screenshot](public/screenshots/dashboard.png)       |
+| **jobs Dashboard2**          | ![Dashboard Screenshot](public/screenshots/dashboard_1.png)     |
+| **Show Job Details**         | ![Show Job Screenshot](public/screenshots/show-job-details.png) |
 | **Edit Profile**             | ![Edit Profile Screenshot](public/screenshots/edit-profile.png) |
-| **Responsive (Mobile View)** | ![Mobile View Screenshot](public/screenshots/mobile-view_1.png) |
+| **Responsive (Mobile View)** | ![Mobile View Screenshot](public/screenshots/mobile-view_3.png) |
 | **Responsive (Mobile View)** | ![Mobile View Screenshot](public/screenshots/mobile-view_2.png) |
+| **Responsive (Mobile View)** | ![Mobile View Screenshot](public/screenshots/mobile-view_1.png) |
 
 ---
 
