@@ -8,11 +8,51 @@ use Illuminate\Http\Request;
 class JobController extends Controller
 {
     /**
-     * Display all jobs on the home page.
+     * Display jobs on the home page with optional search/sort + pagination.
+     *
+     * Accepts query params:
+     *  - q:     string search across title, location, employment_type, experience_level
+     *  - sort:  one of [recent, title, location] (default: recent)
      */
-    public function index()
+    public function index(Request $request)
     {
-        $jobs = Job::all();
+        $search = trim((string) $request->get('q', ''));
+        $sort   = (string) $request->get('sort', '');
+
+        $query = Job::query();
+
+        // Search filter
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%")
+                  ->orWhere('employment_type', 'like', "%{$search}%")
+                  ->orWhere('experience_level', 'like', "%{$search}%");
+                // add more fields (e.g., description) if you want:
+                // ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Sort allow-list
+        $sort = in_array($sort, ['recent', 'title', 'location'], true) ? $sort : 'recent';
+
+        switch ($sort) {
+            case 'title':
+                $query->orderBy('title', 'asc');
+                break;
+            case 'location':
+                $query->orderBy('location', 'asc')->orderBy('title', 'asc');
+                break;
+            case 'recent':
+            default:
+                // newest first (created_at desc)
+                $query->latest();
+                break;
+        }
+
+        // Paginate (12 per page) and keep current query string for links
+        $jobs = $query->paginate(12)->appends($request->query());
+
         return view('home', compact('jobs'));
     }
 
@@ -30,17 +70,19 @@ class JobController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'location' => 'required|string|max:255',
-            'salary' => 'nullable|numeric',
-            'employment_type' => 'required|in:full-time,part-time,contract,freelance',
+            'title'            => 'required|string|max:255',
+            'description'      => 'nullable|string',
+            'location'         => 'required|string|max:255',
+            'salary'           => 'nullable|numeric',
+            'employment_type'  => 'required|in:full-time,part-time,contract,freelance',
             'experience_level' => 'nullable|string|max:100',
         ]);
 
         Job::create($validated);
 
-        return redirect()->route('jobs.create')->with('success', 'Job added successfully!');
+        return redirect()
+            ->route('jobs.create')
+            ->with('success', 'Job added successfully!');
     }
 
     /**
@@ -58,18 +100,20 @@ class JobController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'location' => 'required|string|max:255',
-            'salary' => 'nullable|numeric',
-            'employment_type' => 'required|in:full-time,part-time,contract,freelance',
+            'title'            => 'required|string|max:255',
+            'description'      => 'nullable|string',
+            'location'         => 'required|string|max:255',
+            'salary'           => 'nullable|numeric',
+            'employment_type'  => 'required|in:full-time,part-time,contract,freelance',
             'experience_level' => 'nullable|string|max:100',
         ]);
 
         $job = Job::findOrFail($id);
         $job->update($validated);
 
-        return redirect()->route('home')->with('success', 'Job updated successfully!');
+        return redirect()
+            ->route('home')
+            ->with('success', 'Job updated successfully!');
     }
 
     /**
@@ -80,13 +124,17 @@ class JobController extends Controller
         $job = Job::findOrFail($id);
         $job->delete();
 
-        return redirect()->route('home')->with('success', 'Job deleted successfully!');
+        return redirect()
+            ->route('home')
+            ->with('success', 'Job deleted successfully!');
     }
 
+    /**
+     * Show a single job.
+     */
     public function show($id)
-{
-    $job = Job::findOrFail($id);
-    return view('job_show', compact('job'));
-}
-
+    {
+        $job = Job::findOrFail($id);
+        return view('job_show', compact('job'));
+    }
 }
