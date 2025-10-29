@@ -1,6 +1,6 @@
 # 🚀 Laravel Job Dashboard
 
-A clean and secure job management system built with **Laravel 10+** and **Laravel Breeze**. Users can add, edit, view, and delete job listings, with full authentication and profile management out of the box.
+A clean and secure job management system built with **Laravel 12** and **Laravel Breeze**. Users can add, edit, view, and delete job listings, with full authentication and profile management out of the box.
 
 ---
 
@@ -32,6 +32,23 @@ A clean and secure job management system built with **Laravel 10+** and **Larave
 * ✅ Profile management
 
 > Tip: Protect job routes with `auth` and (optionally) `verified` middleware. Consider authorization policies so users can only modify their own jobs.
+
+---
+
+## 🖼️ Screenshots
+
+Here’s a quick look at the main sections of the Job Dashboard:
+
+| Feature                      | Screenshot                                                      |
+| ---------------------------- | --------------------------------------------------------------- |
+| **Welcome Page**             | ![Welcome Page Screenshot](public/screenshots/welcome.png)      |
+| **Dashboard**                | ![Dashboard Screenshot](public/screenshots/dashboard.png)       |
+| **Show Job Details**         | ![Show Job Screenshot](public/screenshots/show-job.png)         |
+| **Edit Profile**             | ![Edit Profile Screenshot](public/screenshots/edit-profile.png) |
+| **Responsive (Mobile View)** | ![Mobile View Screenshot](public/screenshots/mobile-view_1.png) |
+| **Responsive (Mobile View)** | ![Mobile View Screenshot](public/screenshots/mobile-view_2.png) |
+
+> 📸 Place your screenshots in the `public/screenshots` directory to ensure they render correctly on GitHub.
 
 ---
 
@@ -67,6 +84,8 @@ A clean and secure job management system built with **Laravel 10+** and **Larave
 | POST   | `/confirm-password`                | `ConfirmablePasswordController@store`           | —                     |
 | PUT    | `/password`                        | `PasswordController@update`                     | `password.update`     |
 
+> These are the conventional Breeze routes. If you used Breeze with Inertia/React/Vue, URIs are the same but controllers live in the `Auth` namespace. Run `php artisan route:list` to confirm in your app.
+
 ---
 
 ## 🚀 Getting Started
@@ -101,6 +120,14 @@ npm run dev
 # 5) Serve
 php artisan serve
 ```
+
+---
+
+## 🔒 Middleware & Policies (Recommended)
+
+* Add `Route::middleware(['auth','verified'])` for the dashboard and job routes.
+* Create a `JobPolicy` to ensure users can only update/delete their own jobs.
+* Use form method spoofing for `PUT`, `PATCH`, and `DELETE` in Blade: `@method('PUT')`, `@method('DELETE')`.
 
 ---
 
