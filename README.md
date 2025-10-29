@@ -31,8 +31,6 @@ A clean and secure job management system built with **Laravel 12** and **Laravel
 * ✅ Authenticated dashboard access
 * ✅ Profile management
 
-> Tip: Protect job routes with `auth` and (optionally) `verified` middleware. Consider authorization policies so users can only modify their own jobs.
-
 ---
 
 ## 🖼️ Screenshots
@@ -47,8 +45,6 @@ Here’s a quick look at the main sections of the Job Dashboard:
 | **Edit Profile**             | ![Edit Profile Screenshot](public/screenshots/edit-profile.png) |
 | **Responsive (Mobile View)** | ![Mobile View Screenshot](public/screenshots/mobile-view_1.png) |
 | **Responsive (Mobile View)** | ![Mobile View Screenshot](public/screenshots/mobile-view_2.png) |
-
-> 📸 Place your screenshots in the `public/screenshots` directory to ensure they render correctly on GitHub.
 
 ---
 
