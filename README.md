@@ -88,7 +88,7 @@ Here’s a quick look at the main sections of the Job Dashboard:
 
 ```bash
 # 1) Clone and install dependencies
-git clone https://github.com/your-username/job-dashboard.git
+git clone https://github.com/username/job-dashboard.git
 cd job-dashboard
 composer install
 npm install
@@ -124,14 +124,6 @@ php artisan serve
 * Add `Route::middleware(['auth','verified'])` for the dashboard and job routes.
 * Create a `JobPolicy` to ensure users can only update/delete their own jobs.
 * Use form method spoofing for `PUT`, `PATCH`, and `DELETE` in Blade: `@method('PUT')`, `@method('DELETE')`.
-
----
-
-## 🧪 Testing (Optional)
-
-```bash
-php artisan test
-```
 
 ---
 
