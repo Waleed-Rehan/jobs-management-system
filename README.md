@@ -40,6 +40,7 @@ Here’s a quick look at the main sections of the Job Dashboard:
 | Feature                      | Screenshot                                                      |
 | ---------------------------- | --------------------------------------------------------------- |
 | **Welcome Page**             | ![Welcome Page Screenshot](public/screenshots/welcome.png)      |
+| **Dashboard**                | ![Dashboard Screenshot](public/screenshots/dashboard_1.png)       |
 | **Dashboard**                | ![Dashboard Screenshot](public/screenshots/dashboard.png)       |
 | **Show Job Details**         | ![Show Job Screenshot](public/screenshots/show-job.png)         |
 | **Edit Profile**             | ![Edit Profile Screenshot](public/screenshots/edit-profile.png) |
