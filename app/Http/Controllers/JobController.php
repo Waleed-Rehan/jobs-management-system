@@ -51,7 +51,7 @@ class JobController extends Controller
         }
 
         // Paginate (12 per page) and keep current query string for links
-        $jobs = $query->paginate(12)->appends($request->query());
+        $jobs = $query->paginate(9)->appends($request->query());
 
         return view('home', compact('jobs'));
     }
